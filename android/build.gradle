@@ -66,6 +66,10 @@ android {
     minSdkVersion getExtOrIntegerDefault("minSdkVersion")
     targetSdkVersion getExtOrIntegerDefault("targetSdkVersion")
     buildConfigField "boolean", "IS_NEW_ARCHITECTURE_ENABLED", isNewArchitectureEnabled().toString()
+    buildConfigField "String", "BASE_URL_IDP", "\"https://collaudo.idserver.servizicie.interno.gov.it/idp/\""
+    buildConfigField "String", "BASE_URL_CERTIFICATE", "\"collaudo.idserver.servizicie.interno.gov.it\""
+    buildConfigField "String", "PIN_ROOT", "\"sha256/cGuxAXyFXFkWm61cF4HPWX8S0srS9j0aSqN0k4AP+4A=\""
+    buildConfigField "String", "PIN_LEAF", "\"sha256/aQmQCV6ngX49Y/T5Imt8jykuzmOrWGnw82wtvD9yo1g=\""
   }
   buildTypes {
     release {
@@ -89,7 +93,23 @@ repositories {
   google()
 }
 
-def kotlin_version = getExtOrDefault("kotlinVersion")
+//def kotlin_version = getExtOrDefault("kotlinVersion")
+
+ext {
+  kotlin_version = getExtOrDefault("kotlinVersion")
+  core_version = '1.10.1'
+  activity_version = '1.7.2'
+  fragment_version = '1.6.0'
+  browser_version = '1.5.0'
+  viewmodel_version = '2.6.1'
+  appcompat_version = '1.6.1'
+  lifecycle_version = '2.2.0'
+  okhttp_version = '4.10.0'
+  retrofit_version = '2.9.0'
+  security_version = '1.1.0-alpha06'
+  jose_jwt_version = '9.23'
+  oauth2_version = '10.9.1'
+}
 
 dependencies {
   // For < 0.71, this will be from the local maven repo
@@ -97,6 +117,49 @@ dependencies {
   //noinspection GradleDynamicVersion
   implementation "com.facebook.react:react-native:+"
   implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+
+  // androidpidprovider
+  implementation "androidx.core:core-ktx:$core_version"
+  implementation "androidx.appcompat:appcompat:$appcompat_version"
+  implementation "androidx.activity:activity-ktx:$activity_version"
+  implementation "androidx.fragment:fragment-ktx:$fragment_version"
+  implementation "androidx.browser:browser:$browser_version"
+
+  //Lifecycle
+  implementation "androidx.lifecycle:lifecycle-extensions:$lifecycle_version"
+  implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version"
+
+  //Network
+  implementation "com.squareup.okhttp3:okhttp:$okhttp_version"
+  implementation "com.squareup.okhttp3:logging-interceptor:$okhttp_version"
+  implementation "com.squareup.retrofit2:retrofit:$retrofit_version"
+  implementation "com.squareup.retrofit2:converter-gson:$retrofit_version"
+  implementation "com.squareup.retrofit2:adapter-rxjava2:$retrofit_version"
+
+  //Security
+  implementation "androidx.security:security-crypto:$security_version"
+  implementation "com.nimbusds:nimbus-jose-jwt:$jose_jwt_version"
+  implementation "com.nimbusds:oauth2-oidc-sdk:$oauth2_version"
+  implementation 'io.jsonwebtoken:jjwt:0.7.0'
+
+  // Test
+  testImplementation 'junit:junit:4.13.2'
+  androidTestImplementation 'androidx.test.ext:junit:1.1.5'
+  androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
+
+  //network
+  implementation "com.squareup.retrofit2:converter-scalars:$retrofit_version"
+  implementation "com.squareup.okio:okio:2.9.0"
+  implementation "com.squareup.retrofit2:converter-moshi:2.9.0"
+  //tsl
+  implementation 'com.google.android.gms:play-services-auth:19.2.0'
+
+  //rxjava
+  implementation 'io.reactivex.rxjava2:rxjava:2.2.21'
+  implementation 'io.reactivex.rxjava2:rxandroid:2.1.1'
+
+  implementation "com.madgag.spongycastle:core:1.58.0.0"
+  implementation "com.madgag.spongycastle:bcpkix-jdk15on:1.58.0.0"
 }
 
 if (isNewArchitectureEnabled()) {
