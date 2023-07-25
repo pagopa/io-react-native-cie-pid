@@ -90,7 +90,7 @@ object CieIDSdk : NfcAdapter.ReaderCallback {
 
     fun createCertificatePinning(){
         certificatePinner = CertificatePinner.Builder()
-            .add(BuildConfig.BASE_URL_CERTIFICATE, BuildConfig.PIN_ROOT)
+            .add(BuildConfig.BASE_URL_CERTIFICATE,BuildConfig.PIN_ROOT)
             .add(BuildConfig.BASE_URL_CERTIFICATE,BuildConfig.PIN_LEAF)
             .build()
     }

@@ -21,10 +21,10 @@ export default function App() {
   const [ciePin, onChangeCiePin] = React.useState('');
   const [info, setInfo] = React.useState('');
 
-  const cieAuthorizationUri =
-    'https://idserver.servizicie.interno.gov.it/idp/protocol/openid-connect/auth';
+  // const cieAuthorizationUri = 'http://localhost';
 
   React.useEffect(() => {
+    console.log('=== STARTING CIE MANAGER ===');
     CieManager.start()
       .then(async () => {
         CieManager.onEvent(handleCieEvent);
@@ -38,21 +38,25 @@ export default function App() {
   }, []);
 
   const handleCieEvent = async (event: any) => {
+    console.log('=== EVENT ===');
     console.log(event);
   };
 
   const handleCieError = async (event: any) => {
+    console.log('=== ERROR ===');
     console.log(event);
   };
 
   const handleCieSuccess = async (event: any) => {
+    console.log('=== SUCCESS ===');
     console.log(event);
   };
 
   const handleCieAuthentication = async () => {
     try {
+      console.log(ciePin);
       await CieManager.setPin(ciePin);
-      CieManager.setAuthenticationUrl(cieAuthorizationUri);
+      // CieManager.setAuthenticationUrl(cieAuthorizationUri);
       await CieManager.startListeningNFC();
     } catch (error) {
       console.error(error);
