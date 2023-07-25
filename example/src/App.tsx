@@ -1,11 +1,13 @@
 import * as React from 'react';
 import CieManager from 'io-react-native-cie-pid';
 import {
+  ActivityIndicator,
   Button,
   SafeAreaView,
   StyleSheet,
   Text,
   TextInput,
+  View,
 } from 'react-native';
 
 const styles = StyleSheet.create({
@@ -15,65 +17,138 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     padding: 10,
   },
+  content: {
+    justifyContent: 'center',
+    padding: 20,
+    height: '100%',
+  },
+  padding: {
+    padding: 10,
+  },
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+  },
+  horizontal: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    padding: 10,
+  },
 });
 
 export default function App() {
+  const [cieStarted, setCieStarted] = React.useState(false);
   const [ciePin, onChangeCiePin] = React.useState('');
-  const [info, setInfo] = React.useState('');
-
-  // const cieAuthorizationUri = 'http://localhost';
-
-  React.useEffect(() => {
-    console.log('=== STARTING CIE MANAGER ===');
-    CieManager.start()
-      .then(async () => {
-        CieManager.onEvent(handleCieEvent);
-        CieManager.onError(handleCieError);
-        CieManager.onSuccess(handleCieSuccess);
-        setInfo('CieManager started');
-      })
-      .catch(() => {
-        setInfo('CieManager not started');
-      });
-  }, []);
+  const [isLoading, setIsLoading] = React.useState(false);
+  const [cieData, setCieData] = React.useState('');
 
   const handleCieEvent = async (event: any) => {
-    console.log('=== EVENT ===');
+    console.log('=== ON CIE EVENT ===');
     console.log(event);
   };
 
   const handleCieError = async (event: any) => {
-    console.log('=== ERROR ===');
+    console.log('=== ON CIE ERROR ===');
     console.log(event);
   };
 
   const handleCieSuccess = async (event: any) => {
-    console.log('=== SUCCESS ===');
-    console.log(event);
+    console.log('=== ON CIE SUCCESS ===');
+    try {
+      const cieDataResult = JSON.parse(event);
+      setCieData(JSON.stringify(cieDataResult));
+      console.log(cieDataResult);
+      setIsLoading(false);
+    } catch {
+      console.log("can't parse cie data");
+    }
+    CieManager.stopListeningNFC();
+    CieManager.removeAllListeners();
   };
 
   const handleCieAuthentication = async () => {
     try {
-      console.log(ciePin);
+      setIsLoading(true);
       await CieManager.setPin(ciePin);
-      // CieManager.setAuthenticationUrl(cieAuthorizationUri);
       await CieManager.startListeningNFC();
     } catch (error) {
       console.error(error);
     }
   };
 
+  const startCieManager = async () => {
+    try {
+      await CieManager.start();
+      await CieManager.onEvent(handleCieEvent);
+      await CieManager.onError(handleCieError);
+      await CieManager.onSuccess(handleCieSuccess);
+      setCieStarted(true);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const stopCieManager = async () => {
+    try {
+      await CieManager.stopListeningNFC();
+      await CieManager.removeAllListeners();
+      setCieStarted(false);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const renderHome = () => {
+    return (
+      <View style={styles.content}>
+        <Button title="start cie authentication" onPress={startCieManager} />
+      </View>
+    );
+  };
+
+  const renderCiePinScreen = () => {
+    return (
+      <View style={styles.content}>
+        {isLoading ? (
+          renderLoadingIndicator()
+        ) : (
+          <>
+            <TextInput
+              style={styles.input}
+              onChangeText={onChangeCiePin}
+              value={ciePin}
+              placeholder="insert cie pin"
+              keyboardType="numeric"
+            />
+            <View style={styles.padding} />
+            <Button title="continue" onPress={handleCieAuthentication} />
+            <View style={styles.padding} />
+            <Button title="stop cie manager" onPress={stopCieManager} />
+            <View style={styles.padding} />
+            <Text>{cieData}</Text>
+          </>
+        )}
+      </View>
+    );
+  };
+
+  const renderLoadingIndicator = () => {
+    return (
+      <View style={[styles.content]}>
+        <ActivityIndicator size="large" />
+        <View style={styles.padding} />
+        <Text style={styles.padding}>
+          {
+            'Place your ID card on the back of your smartphone and hold it still until completed'
+          }
+        </Text>
+      </View>
+    );
+  };
+
   return (
     <SafeAreaView>
-      <TextInput
-        style={styles.input}
-        onChangeText={onChangeCiePin}
-        value={ciePin}
-        placeholder="insert cie pin"
-        keyboardType="numeric"
-      />
-      <Button title="continue" onPress={handleCieAuthentication} />
-      <Text>{info}</Text>
+      {!cieStarted ? renderHome() : renderCiePinScreen()}
     </SafeAreaView>
   );
 }

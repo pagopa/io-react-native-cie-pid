@@ -16,6 +16,7 @@ import android.content.Intent
 import android.app.Activity
 import android.net.Uri
 import it.ipzs.cieidsdk.data.PidCieData
+import org.json.JSONObject
 
 class IoReactNativeCiePidModule(reactContext: ReactApplicationContext) :
   ReactContextBaseJavaModule(reactContext), Callback {
@@ -31,7 +32,11 @@ class IoReactNativeCiePidModule(reactContext: ReactApplicationContext) :
    * @param[url] the form consent url
    */
   override fun onSuccess(url: String, pinCieData: PidCieData?) {
-    this.sendEvent(successChannel, url)
+    val cieDataString = pinCieData?.toString() ?: ""
+    val eventData = JSONObject()
+    eventData.put("url", url)
+    eventData.put("cieData", cieDataString)
+    this.sendEvent(successChannel, eventData.toString())
   }
 
   /**
