@@ -34,7 +34,8 @@ internal class PidProviderFacade(
             val requestUri = pkceFacade.requestPar(signedJwtForPar)
             pkceFacade.loadAuthorizeWebview(activity, requestUri,cdAuthorize)
             val authorizeResponse = cdAuthorize.await().orEmpty()
-            val proof = pkceFacade.getToken(authorizeResponse, requestUri)
+            val redirectUri = sharedPreferences.getWalletUri()
+            val proof = pkceFacade.getToken(authorizeResponse, redirectUri)
             sharedPreferences.saveUnsignedJWTProof(proof)
             PidSdkStartCallbackManager.invokeOnComplete(true)
         }
