@@ -2,7 +2,7 @@
   "compilerOptions": {
     "baseUrl": "./",
     "paths": {
-      "io-react-native-cie-pid": ["./src/index"]
+      "@pagopa/io-react-native-cie-pid": ["./src/index"]
     },
     "allowUnreachableCode": false,
     "allowUnusedLabels": false,

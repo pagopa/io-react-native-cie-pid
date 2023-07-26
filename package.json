@@ -1,6 +1,6 @@
 {
-  "name": "io-react-native-cie-pid",
-  "version": "0.1.0",
+  "name": "@pagopa/io-react-native-cie-pid",
+  "version": "0.1.2",
   "description": "A RN library for pid issuing based on native IPZS SDK",
   "main": "lib/commonjs/index",
   "module": "lib/module/index",
@@ -105,7 +105,7 @@
       "tagName": "v${version}"
     },
     "npm": {
-      "publish": true
+      "publish": false
     },
     "github": {
       "release": true

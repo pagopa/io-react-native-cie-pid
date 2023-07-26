@@ -1,21 +1,57 @@
-# io-react-native-cie-pid
-
+⚡️ @pagopa/io-react-native-cie-pid
 A RN library for pid issuing based on native IPZS Android SDK
 
 ## Installation
 
 ```sh
-npm install io-react-native-cie-pid
+npm install @pagopa/io-react-native-cie-pid
 ```
 
 ## Usage
 
 ```js
-import { multiply } from 'io-react-native-cie-pid';
+import CieManager from '@pagopa/io-react-native-cie-pid';
 
 // ...
 
-const result = await multiply(3, 7);
+const startCieManager = async () => {
+  try {
+    await CieManager.start();
+    // event listener
+    await CieManager.onEvent(handleCieEvent);
+    await CieManager.onError(handleCieError);
+    await CieManager.onSuccess(handleCieSuccess);
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+const stopCieManager = async () => {
+  try {
+    await CieManager.stopListeningNFC();
+    await CieManager.removeAllListeners();
+    setCieStarted(false);
+  } catch (error) {
+    console.error(error);
+  }
+};
+```
+
+## Example
+
+You can use the sample app to test and understand how to use the library.
+
+```bash
+cd example
+
+yarn install
+
+# To use iOS (Not supported)
+# yarn ios
+
+# To use Android
+yarn android
+
 ```
 
 ## Contributing
