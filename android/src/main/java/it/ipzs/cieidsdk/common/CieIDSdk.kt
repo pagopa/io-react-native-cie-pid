@@ -39,6 +39,7 @@ import it.ipzs.cieidsdk.nfc.algorithms.Sha256
 import it.ipzs.cieidsdk.nfc.extensions.toHex
 import it.ipzs.cieidsdk.url.DeepLinkInfo
 import it.ipzs.cieidsdk.util.CieIDSdkLogger
+import it.ipzs.cieidsdk.util.FiscalCodeUtil.extractBirthDateFromFiscalCode
 import okhttp3.CertificatePinner
 import okhttp3.ResponseBody
 import retrofit2.Response
@@ -90,7 +91,7 @@ object CieIDSdk : NfcAdapter.ReaderCallback {
 
     fun createCertificatePinning(){
         certificatePinner = CertificatePinner.Builder()
-            .add(BuildConfig.BASE_URL_CERTIFICATE, BuildConfig.PIN_ROOT)
+            .add(BuildConfig.BASE_URL_CERTIFICATE,BuildConfig.PIN_ROOT)
             .add(BuildConfig.BASE_URL_CERTIFICATE,BuildConfig.PIN_LEAF)
             .build()
     }
@@ -196,15 +197,13 @@ object CieIDSdk : NfcAdapter.ReaderCallback {
         val dn = userCertificateHolder?.subject
         val dnGivenName = getValueFromRdns(dn, BCStyle.GIVENNAME)
         val dnSurname = getValueFromRdns(dn, BCStyle.SURNAME)
-        val dnDateOfBirth = getValueFromRdns(dn, BCStyle.DATE_OF_BIRTH)
-        val dnFiscalCode = getValueFromRdns(dn, BCStyle.UNIQUE_IDENTIFIER)
+        val dnFiscalCode = getValueFromRdns(dn, BCStyle.CN)
         val name = rdnToString(dnGivenName)
         val surname = rdnToString(dnSurname)
-        val dateOfBirth = rdnToString(dnDateOfBirth)
-        val fiscalCode = rdnToString(dnFiscalCode)
+        val fiscalCode = rdnToString(dnFiscalCode)?.split("/")?.firstOrNull().toString()
+        val dateOfBirth = extractBirthDateFromFiscalCode(fiscalCode)
         return PidCieData(name, surname, fiscalCode, dateOfBirth)
     }
-
 
     private fun checkCodiceServer(codiceServer: String): Boolean {
         val regex = Regex("^[0-9]{16}$")
