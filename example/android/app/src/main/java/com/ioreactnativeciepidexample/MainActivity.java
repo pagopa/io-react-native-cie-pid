@@ -1,4 +1,4 @@
-package com.ioreactnativeciepidexample;
+package it.ioreactnativeciepidexample;
 
 import com.facebook.react.ReactActivity;
 import com.facebook.react.ReactActivityDelegate;
