@@ -1,5 +1,5 @@
 import * as React from 'react';
-import CieManager from '@pagopa/io-react-native-cie-pid';
+import CieManager, { type CieData } from '@pagopa/io-react-native-cie-pid';
 import {
   ActivityIndicator,
   Button,
@@ -55,7 +55,7 @@ export default function App() {
   const handleCieSuccess = async (event: any) => {
     console.log('=== ON CIE SUCCESS ===');
     try {
-      const cieDataResult = JSON.parse(event);
+      const cieDataResult: CieData = JSON.parse(event);
       setCieData(JSON.stringify(cieDataResult));
       console.log(cieDataResult);
       setIsLoading(false);
