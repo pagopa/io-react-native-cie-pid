@@ -1,4 +1,4 @@
-package com.ioreactnativeciepidexample;
+package it.ioreactnativeciepidexample;
 
 import android.app.Application;
 import com.facebook.react.PackageList;

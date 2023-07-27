@@ -31,7 +31,43 @@ const isIosDeviceCompatible =
 // the event.
 //
 
-type EventHandler = (event: any) => void;
+type CIEEvent =
+  | 'ON_TAG_DISCOVERED_NOT_CIE'
+  | 'ON_TAG_DISCOVERED'
+  | 'ON_TAG_LOST'
+  | 'ON_CARD_PIN_LOCKED'
+  | 'ON_PIN_ERROR'
+  | 'PIN_INPUT_ERROR'
+  | 'CERTIFICATE_EXPIRED'
+  | 'CERTIFICATE_REVOKED'
+  | 'AUTHENTICATION_ERROR'
+  | 'ON_NO_INTERNET_CONNECTION'
+  | 'STOP_NFC_ERROR'
+  | 'START_NFC_ERROR'
+  | 'EXTENDED_APDU_NOT_SUPPORTED'
+  // iOS dedicated events
+  | 'PIN Locked'
+  | 'TAG_ERROR_NFC_NOT_SUPPORTED'
+  | 'Transmission Error';
+
+export type PidData = {
+  name: string;
+  surname: string;
+  fiscalCode: string;
+  birthDate: string;
+};
+
+export type CieData = {
+  url: string;
+  pidData: PidData;
+};
+
+export type Event = {
+  event: CIEEvent;
+  attemptsLeft: number;
+};
+
+type EventHandler = (event: Event) => void;
 
 const CieManager = () => {
   const _eventSuccessHandlers: EventHandler[] = [];
@@ -53,7 +89,7 @@ const CieManager = () => {
       _eventSuccessHandlers.forEach((h) => h(e.event));
     });
     NativeCieEmitter.addListener('onError', (e) => {
-      _eventErrorHandlers.forEach((h) => h(new Error(e.event)));
+      _eventErrorHandlers.forEach((h) => h(e.event));
     });
   };
 
@@ -186,7 +222,7 @@ const CieManager = () => {
     try {
       const nfcFeature = await hasNFCFeature();
       const apiLevelSupport = await hasApiLevelSupport();
-      return Promise.resolve(nfcFeature && apiLevelSupport);
+      return Promise.resolve<boolean>(nfcFeature && apiLevelSupport);
     } catch {
       return Promise.resolve(false);
     }
@@ -197,8 +233,8 @@ const CieManager = () => {
    * is possible enable or disable it.
    */
   const isNFCEnabled = () => {
-    return new Promise((resolve) => {
-      IoReactNativeCiePid.isNFCEnabled((result: any) => {
+    return new Promise<boolean>((resolve) => {
+      IoReactNativeCiePid.isNFCEnabled((result: boolean) => {
         resolve(result);
       });
     });
@@ -211,10 +247,10 @@ const CieManager = () => {
    */
   const hasApiLevelSupport = () => {
     if (Platform.OS === 'ios') {
-      return Promise.resolve(isIosDeviceCompatible);
+      return Promise.resolve<boolean>(isIosDeviceCompatible);
     }
-    return new Promise((resolve) => {
-      IoReactNativeCiePid.hasApiLevelSupport((result: any) => {
+    return new Promise<boolean>((resolve) => {
+      IoReactNativeCiePid.hasApiLevelSupport((result: boolean) => {
         resolve(result);
       });
     });
@@ -224,8 +260,8 @@ const CieManager = () => {
    * Check if the hardware module nfc is installed (only for Android devices)
    */
   const hasNFCFeature = () => {
-    return new Promise((resolve) => {
-      IoReactNativeCiePid.hasNFCFeature((result: any) => {
+    return new Promise<boolean>((resolve) => {
+      IoReactNativeCiePid.hasNFCFeature((result: boolean) => {
         resolve(result);
       });
     });

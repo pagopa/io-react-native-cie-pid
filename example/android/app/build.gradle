@@ -73,9 +73,9 @@ android {
 
     compileSdkVersion rootProject.ext.compileSdkVersion
 
-    namespace "com.ioreactnativeciepidexample"
+    namespace "it.ioreactnativeciepidexample"
     defaultConfig {
-        applicationId "com.ioreactnativeciepidexample"
+        applicationId "it.ioreactnativeciepidexample"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
