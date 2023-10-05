@@ -68,7 +68,8 @@ export default function App() {
 
   const handleCieAuthentication = async () => {
     try {
-      setIsLoading(true);
+      await CieManager.start();
+      // setIsLoading(true);
       await CieManager.setPin(ciePin);
       await CieManager.startListeningNFC();
     } catch (error) {
@@ -78,7 +79,6 @@ export default function App() {
 
   const startCieManager = async () => {
     try {
-      await CieManager.start();
       await CieManager.onEvent(handleCieEvent);
       await CieManager.onError(handleCieError);
       await CieManager.onSuccess(handleCieSuccess);

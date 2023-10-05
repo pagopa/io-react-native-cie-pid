@@ -1,3 +1,4 @@
+import React
 import iociesdkios
 
 let eventChannel = "onEvent"
@@ -6,25 +7,28 @@ let successChannel = "onSuccess"
 
 @objc(IoReactNativeCiePid)
 @available(iOS 13.0, *)
-class IoReactNativeCiePid: NSObject {
+class IoReactNativeCiePid: RCTEventEmitter {
     
-    var attemptsLeft: Int = 0
-    var PIN: String?
-    var url: String?
-    
-    var cieSDK: CIEIDSdk?
-    
+    private var attemptsLeft: Int = 0
+    private var PIN: String?
+    private var url: String?
+    private var cieSDK: CIEIDSdk?
+        
     override init() {
         super.init()
         self.cieSDK = CIEIDSdk()
         
     }
     
-    @objc func isNFCEnabled(_ callback: RCTResponseSenderBlock) {
+    override func supportedEvents() -> [String]! {
+        return ["onSuccess", "onEvent", "onError"]
+    }
+    
+    @objc func isNFCEnabled(_ callback: @escaping RCTResponseSenderBlock) {
         callback([true])
     }
     
-    @objc func hasNFCFeature(_ callback: RCTResponseSenderBlock) {
+    @objc func hasNFCFeature(_ callback: @escaping RCTResponseSenderBlock) {
         let value = cieSDK?.hasNFCFeature() ?? false
         callback([NSNumber(value: value)])
     }
@@ -49,9 +53,9 @@ class IoReactNativeCiePid: NSObject {
         return self.url
     }
     
-    func post(callback: @escaping (String?, String?) -> Void) {
+    private func post(callback: @escaping (String?, String?) -> Void) {
         DispatchQueue.global().async {
-            self.cieSDK?.post(url: self.url!, pin: self.PIN!) { error, response in
+            self.cieSDK?.post(url: "https://interno.gov.it", pin: self.PIN ?? "") { error, response in
                 callback(error, response)
             }
         }
@@ -60,21 +64,19 @@ class IoReactNativeCiePid: NSObject {
     @objc func start(_ callback: RCTResponseSenderBlock) {
         post { error, response in
             if error == nil {
-                self.sendEvent(channel: successChannel, eventValue: response)
+                self.sendCieEvent(channel: successChannel, eventValue: response ?? "")
             } else {
-                self.sendEvent(channel: eventChannel, eventValue: error)
+                self.sendCieEvent(channel: errorChannel, eventValue: error ?? "")
             }
         }
         callback([])
     }
     
-    func sendEvent(channel: String, eventValue: String?) {
-        let attemptsLeft = NSNumber(value: self.cieSDK?.attemptsLeft ?? 0)
-        let body: [String: Any] = ["event": eventValue ?? "", "attemptsLeft": attemptsLeft]
-        // self.sendEvent(channel: channel, eventValue: body["event"] as? String )
+    private func sendCieEvent(channel: String, eventValue: String) {
+        self.sendEvent(withName: channel, body: ["event": eventValue, "attemptsLeft": attemptsLeft] as [String : Any])
     }
     
-    @objc func launchCieID(_ callback: RCTResponseSenderBlock) {
+    @objc func launchCieID(_ callback: @escaping RCTResponseSenderBlock) {
         // TODO: Implement CIE ID
         callback([])
     }
@@ -82,19 +84,19 @@ class IoReactNativeCiePid: NSObject {
     // The following methods are not available on iOS
     // Implement them if needed for Android or other platforms
     
-    @objc func startListeningNFC(_ callback: RCTResponseSenderBlock) {
+    @objc func startListeningNFC(_ callback: @escaping RCTResponseSenderBlock) {
         callback([])
     }
     
-    @objc func stopListeningNFC(_ callback: RCTResponseSenderBlock) {
+    @objc func stopListeningNFC(_ callback: @escaping RCTResponseSenderBlock) {
         callback([])
     }
     
-    @objc func openNFCSettings(_ callback: RCTResponseSenderBlock) {
+    @objc func openNFCSettings(_ callback: @escaping RCTResponseSenderBlock) {
         callback([])
     }
     
-    @objc func hasApiLevelSupport(_ callback: RCTResponseSenderBlock) {
+    @objc func hasApiLevelSupport(_ callback: @escaping RCTResponseSenderBlock) {
         callback([])
     }
     

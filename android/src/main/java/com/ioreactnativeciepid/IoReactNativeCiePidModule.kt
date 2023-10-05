@@ -31,8 +31,8 @@ class IoReactNativeCiePidModule(reactContext: ReactApplicationContext) :
    * onSuccess is called when the CIE authentication is successfully completed.
    * @param[url] the form consent url
    */
-  override fun onSuccess(url: String, pinCieData: PidCieData?) {
-    val cieDataString = pinCieData?.toString() ?: ""
+  override fun onSuccess(url: String, pidCieData: PidCieData?) {
+    val cieDataString = pidCieData?.toString() ?: ""
     val eventData = JSONObject()
     eventData.put("url", url)
     eventData.put("cieData", cieDataString)
