@@ -1,5 +1,5 @@
 import * as React from 'react';
-import CieManager from '@pagopa/io-react-native-cie-pid';
+import CieManager, { type CieData } from '@pagopa/io-react-native-cie-pid';
 import {
   ActivityIndicator,
   Button,

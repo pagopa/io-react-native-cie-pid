@@ -51,7 +51,7 @@ def supportsNamespace() {
 
 android {
   if (supportsNamespace()) {
-    namespace "com.ioreactnativeciepid"
+    namespace "it.ioreactnativeciepid"
   } else {
     sourceSets {
       main {
@@ -175,6 +175,6 @@ if (isNewArchitectureEnabled()) {
   react {
     jsRootDir = file("../src/")
     libraryName = "IoReactNativeCiePid"
-    codegenJavaPackageName = "com.ioreactnativeciepid"
+    codegenJavaPackageName = "it.ioreactnativeciepid"
   }
 }

@@ -1,5 +1,8 @@
-⚡️ @pagopa/io-react-native-cie-pid
-A RN library for pid issuing based on native IPZS Android SDK
+# ⚡️ @pagopa/io-react-native-cie-pid
+
+![CI workflow](https://github.com/pagopa/io-react-native-cie-pid/actions/workflows/ci.yml/badge.svg)
+
+A RN library for pid issuing based on native IPZS Android SDK (iOS will be available soon)
 
 ## Installation
 
@@ -17,7 +20,6 @@ import CieManager from '@pagopa/io-react-native-cie-pid';
 const startCieManager = async () => {
   try {
     await CieManager.start();
-    // event listener
     await CieManager.onEvent(handleCieEvent);
     await CieManager.onError(handleCieError);
     await CieManager.onSuccess(handleCieSuccess);
