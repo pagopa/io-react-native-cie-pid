@@ -55,6 +55,16 @@ export default function App() {
   const handleCieSuccess = async (event: any) => {
     console.log('=== ON CIE SUCCESS ===');
     try {
+      console.log(event);
+      const cieDataParsed: CieData = JSON.parse(event);
+      const cieConsentUri = cieDataParsed.url;
+      const pidData = cieDataParsed.cieData;
+
+      console.log('=== CIE DATA ===');
+      console.log(pidData.name);
+      console.log(pidData.fiscalCode);
+      console.log(cieConsentUri);
+
       const cieDataResult = JSON.parse(event);
       setCieData(JSON.stringify(cieDataResult));
       console.log(cieDataResult);
