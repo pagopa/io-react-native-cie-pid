@@ -41,7 +41,7 @@ class IoReactNativeCiePidModule(reactContext: ReactApplicationContext) :
 
     val eventData = JSONObject()
     eventData.put("url", url)
-    eventData.put("pidData", pidData)
+    eventData.put("pidData", pidData.toString())
     this.sendEvent(successChannel, eventData.toString())
   }
 

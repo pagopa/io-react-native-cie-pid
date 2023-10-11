@@ -58,7 +58,7 @@ export default function App() {
       console.log(event);
       const cieDataParsed: CieData = JSON.parse(event);
       const cieConsentUri = cieDataParsed.url;
-      const pidData = cieDataParsed.cieData;
+      const pidData = cieDataParsed.pidData;
 
       console.log('=== CIE DATA ===');
       console.log(pidData.name);
