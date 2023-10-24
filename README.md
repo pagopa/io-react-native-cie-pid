@@ -48,12 +48,13 @@ cd example
 
 yarn install
 
-# To use iOS (Not supported)
-# yarn ios
+cd ios && bundler exec pod install && cd ..
+
+# To use iOS
+yarn ios
 
 # To use Android
 yarn android
-
 ```
 
 ## Contributing

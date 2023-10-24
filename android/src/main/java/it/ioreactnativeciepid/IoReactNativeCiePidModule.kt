@@ -17,6 +17,13 @@ import android.app.Activity
 import android.net.Uri
 import it.ioreactnativeciepid.ipzs.cieidsdk.data.PidCieData
 import org.json.JSONObject
+import com.google.gson.Gson
+import java.io.Serializable
+
+data class CieData(
+  var url: String?,
+  var pidData: PidCieData?
+) : Serializable
 
 class IoReactNativeCiePidModule(reactContext: ReactApplicationContext) :
   ReactContextBaseJavaModule(reactContext), Callback {
@@ -32,17 +39,10 @@ class IoReactNativeCiePidModule(reactContext: ReactApplicationContext) :
    * @param[url] the form consent url
    */
   override fun onSuccess(url: String, pidCieData: PidCieData?) {
-
-    val pidData = JSONObject()
-    pidData.put("name", pidCieData?.name)
-    pidData.put("surname", pidCieData?.surname)
-    pidData.put("fiscalCode", pidCieData?.fiscalCode)
-    pidData.put("birthDate", pidCieData?.birthDate)
-
-    val eventData = JSONObject()
-    eventData.put("url", url)
-    eventData.put("pidData", pidData)
-    this.sendEvent(successChannel, eventData.toString())
+    val cieData = CieData(url= url, pidData = pidCieData)
+    val gson = Gson()
+    val cieDataEvent = gson.toJson(cieData)
+    this.sendEvent(successChannel, cieDataEvent)
   }
 
   /**

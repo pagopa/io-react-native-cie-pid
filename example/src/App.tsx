@@ -40,7 +40,7 @@ export default function App() {
   const [cieStarted, setCieStarted] = React.useState(false);
   const [ciePin, onChangeCiePin] = React.useState('');
   const [isLoading, setIsLoading] = React.useState(false);
-  const [cieData, setCieData] = React.useState('');
+  const [cieData, setCieData] = React.useState<CieData>();
 
   const handleCieEvent = async (event: any) => {
     console.log('=== ON CIE EVENT ===');
@@ -55,9 +55,8 @@ export default function App() {
   const handleCieSuccess = async (event: any) => {
     console.log('=== ON CIE SUCCESS ===');
     try {
-      const cieDataResult: CieData = JSON.parse(event);
-      setCieData(JSON.stringify(cieDataResult));
-      console.log(cieDataResult);
+      const cieDataParsed: CieData = JSON.parse(event);
+      setCieData(cieDataParsed);
       setIsLoading(false);
     } catch {
       console.log("can't parse cie data");
@@ -68,7 +67,7 @@ export default function App() {
 
   const handleCieAuthentication = async () => {
     try {
-      setIsLoading(true);
+      await CieManager.start();
       await CieManager.setPin(ciePin);
       await CieManager.startListeningNFC();
     } catch (error) {
@@ -78,7 +77,6 @@ export default function App() {
 
   const startCieManager = async () => {
     try {
-      await CieManager.start();
       await CieManager.onEvent(handleCieEvent);
       await CieManager.onError(handleCieError);
       await CieManager.onSuccess(handleCieSuccess);
@@ -101,7 +99,7 @@ export default function App() {
   const renderHome = () => {
     return (
       <View style={styles.content}>
-        <Button title="start cie authentication" onPress={startCieManager} />
+        <Button title="Start CIE authentication" onPress={startCieManager} />
       </View>
     );
   };
@@ -121,11 +119,18 @@ export default function App() {
               keyboardType="numeric"
             />
             <View style={styles.padding} />
-            <Button title="continue" onPress={handleCieAuthentication} />
+            <Button title="Continue" onPress={handleCieAuthentication} />
             <View style={styles.padding} />
-            <Button title="stop cie manager" onPress={stopCieManager} />
+            <Button title="Stop CIE Manager" onPress={stopCieManager} />
             <View style={styles.padding} />
-            <Text>{cieData}</Text>
+            {cieData?.pidData && (
+              <>
+                <Text>{`Name: ${cieData?.pidData.name}`}</Text>
+                <Text>{`Surname: ${cieData?.pidData.surname}`}</Text>
+                <Text>{`Fiscalcode: ${cieData?.pidData.fiscalCode}`}</Text>
+                <Text>{`Birthdate: ${cieData?.pidData.birthDate}`}</Text>
+              </>
+            )}
           </>
         )}
       </View>
