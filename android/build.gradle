@@ -107,7 +107,7 @@ ext {
   okhttp_version = '4.10.0'
   retrofit_version = '2.9.0'
   security_version = '1.1.0-alpha06'
-  jose_jwt_version = '9.23'
+  jose_jwt_version = '8.0'
   oauth2_version = '10.9.1'
 }
 
