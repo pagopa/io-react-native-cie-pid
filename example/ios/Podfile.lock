@@ -677,7 +677,7 @@ SPEC CHECKSUMS:
   hermes-engine: e89344b9e9e54351c3c5cac075e0275148fb37ba
   libevent: 4049cae6c81cdb3654a443be001fb9bdceff7913
   OpenSSL-Universal: ebc357f1e6bc71fa463ccb2fe676756aff50e88c
-  pagopa-io-react-native-cie-pid: b85ea22da263eccb43183c3dcb523afbb8f8a995
+  pagopa-io-react-native-cie-pid: cc2431199d7464faa8f65d90b1e248fe0315ac33
   RCT-Folly: 424b8c9a7a0b9ab2886ffe9c3b041ef628fd4fb1
   RCTRequired: b6cea797b684c6d8d82ba0107cef58cbb679afdb
   RCTTypeSafety: d2eb5e0e8af9181b24034f5171f9b659994b4678
